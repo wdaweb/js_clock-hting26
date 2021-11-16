@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      transition: .5s;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background-color: rgb(12, 12, 12);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #clock {
+      background: linear-gradient(135deg, #32ffea, #fff069, #ff7cf0);
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+      animation: animate 2s linear infinite;
+    }
+
+    @keyframes animate {
+      100% {
+        filter: hue-rotate(360deg);
+      }
+    }
+
+    #clock span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      background: inherit;
+      z-index: -1;
+    }
+
+    #clock span:nth-child(1) {
+      filter: blur(5px);
+    }
+
+    #clock span:nth-child(2) {
+      filter: blur(20px);
+    }
+
+    #clockbg {
+      width: 300px;
+      height: 300px;
+      background-color: rgb(12, 12, 12);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    #clock::after {
+      content: "";
+      background-color: #6b6b6b;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hover {
+      background-color: rgb(255, 228, 228);
+      z-index: 9;
+    }
+
+    #hour {
+      background-color: rgb(255, 255, 255);
+      width: 22%;
+      height: 12px;
+      border-radius: 6px;
+      top: calc(50% - 6px);
+      left: 50%;
+      position: absolute;
+      transform: rotate(0deg);
+      transform-origin: left center;
+      transition: none;
+    }
+
+    #minute {
+      background-color: #bdb675;
+      width: 31%;
+      height: 10px;
+      border-radius: 5px;
+      top: calc(50% - 5px);
+      left: 50%;
+      position: absolute;
+      transform: rotate(0deg);
+      transform-origin: left center;
+      transition: none;
+    }
+
+    #second {
+      background-color: #fff069;
+      width: 28%;
+      height: 6px;
+      border-radius: 5px;
+      top: calc(50% - 3px);
+      left: 50%;
+      position: absolute;
+      transform: rotate(0deg);
+      transform-origin: left center;
+      transition: none;
+    }
+
+    #hour12,
+    #hour1,
+    #hour2,
+    #hour3,
+    #hour4,
+    #hour5 {
+      height: 1px;
+      width: 260px;
+      transform-origin: -0% -50%;
+      top: 50%;
+      left: 50%;
+      position: absolute;
+    }
+
+    #hour12 {
+      left: calc(50% + .5px);
+    }
+
+    #hour12::before,
+    #hour1::before,
+    #hour2::before,
+    #hour3::before,
+    #hour4::before,
+    #hour5::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background-color: rgb(231, 231, 231);
+      border-radius: 10px;
+      position: absolute;
+      top: -5px;
+    }
+
+    #hour12::before,
+    #hour3::before {
+      width: 14px;
+      height: 14px;
+      top: -7px;
+      background-color: aquamarine;
+    }
+
+    #hour12::after,
+    #hour1::after,
+    #hour2::after,
+    #hour3::after,
+    #hour4::after,
+    #hour5::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background-color: rgb(231, 231, 231);
+      border-radius: 10px;
+      position: absolute;
+      top: -5px;
+      right: 0;
+    }
+
+    #hour12::after,
+    #hour3::after {
+      width: 14px;
+      height: 14px;
+      top: -7px;
+      background-color: aquamarine;
+    }
+
+    #hour12 {
+      transform: rotateZ(90deg) translate(-50%, -50%);
+    }
+
+    #hour1 {
+      transform: rotateZ(120deg) translate(-50%, -50%);
+    }
+
+    #hour2 {
+      transform: rotateZ(150deg) translate(-50%, -50%);
+    }
+
+    #hour3 {
+      transform: rotateZ(0deg) translate(-50%, -50%);
+    }
+
+    #hour4 {
+      transform: rotateZ(30deg) translate(-50%, -50%);
+    }
+
+    #hour5 {
+      transform: rotateZ(60deg) translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="clock">
+    <span></span>
+    <span></span>
+    <div id="clockbg"></div>
+    <div id="hour12"></div>
+    <div id="hour1"></div>
+    <div id="hour2"></div>
+    <div id="hour3"></div>
+    <div id="hour4"></div>
+    <div id="hour5"></div>
+    <div id="hour"></div>
+    <div id="minute"></div>
+    <div id="second"></div>
+  </div>
+  <script>
+    const hour = document.getElementById('hour')
+    const minute = document.getElementById('minute')
+    const second = document.getElementById('second')
+
+    const updateClock = () => {
+      const now = new Date()
+      hour.style.transform = `rotate(${30 * now.getHours() - 90 + now.getMinutes() * 30 / 60}deg)`
+      minute.style.transform = `rotate(${6 * now.getMinutes() - 90 + now.getSeconds() * 6 / 60}deg)`
+      second.style.transform = `rotate(${6 * now.getSeconds() - 90}deg)`
+    }
+
+    updateClock()
+    setInterval(updateClock, 1000)
+
+    clock.onmouseover = () => {
+      clockbg.style.backgroundColor = "rgba(0, 0, 0,0.3)"
+      hour.style.backgroundColor = "rgb(211, 211, 211)"
+      minute.style.backgroundColor = "rgb(255,255,255)"
+    }
+    clock.onmouseout = () => { 
+      clockbg.style.backgroundColor = "rgb(12, 12, 12)"
+      hour.style.backgroundColor = "#fff"
+      minute.style.backgroundColor = "#bdb675"
+      second.style.backgroundColor = "#fff069"
+    }
+  </script>
+
+</body>
+
+</html>

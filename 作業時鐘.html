@@ -6,10 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+2&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       transition: .5s;
+      font-family: 'M PLUS 2', sans-serif;
+      transition: 1s;
     }
 
     html,
@@ -22,15 +25,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-flow: column wrap;
     }
 
     #clock {
       background: linear-gradient(135deg, #32ffea, #fff069, #ff7cf0);
       width: 330px;
       height: 330px;
-      border-radius: 50%;
-      display: inline-block;
-      position: relative;
+      border-radius: 70px;
       animation: animate 2s linear infinite;
     }
 
@@ -47,7 +49,7 @@
       transform: translate(-50%, -50%);
       height: 100%;
       width: 100%;
-      border-radius: 50%;
+      border-radius: inherit;
       background: inherit;
       z-index: -1;
     }
@@ -83,11 +85,6 @@
       transform: translate(-50%, -50%);
     }
 
-    .hover {
-      background-color: rgb(255, 228, 228);
-      z-index: 9;
-    }
-
     #hour {
       background-color: rgb(255, 255, 255);
       width: 22%;
@@ -99,6 +96,13 @@
       transform: rotate(0deg);
       transform-origin: left center;
       transition: none;
+      animation: noanimate 2s linear infinite;
+    }
+
+    @keyframes noanimate {
+      100% {
+        filter: hue-rotate(-360deg);
+      }
     }
 
     #minute {
@@ -215,6 +219,25 @@
     #hour5 {
       transform: rotateZ(60deg) translate(-50%, -50%);
     }
+
+    #time {
+      width: 350px;
+      height: 70px;
+      margin-top: 4rem;
+      color: transparent;
+      line-height: 70px;
+      text-align: center;
+      font-size: 40px;
+      cursor: default;
+      letter-spacing: 1px;
+    }
+
+    .glow {
+      background: linear-gradient(135deg, #32ffea, #fff069, #ff7cf0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animate 2s linear infinite;
+    }
   </style>
 </head>
 
@@ -233,6 +256,7 @@
     <div id="minute"></div>
     <div id="second"></div>
   </div>
+  <div id="time"></div>
   <script>
     const hour = document.getElementById('hour')
     const minute = document.getElementById('minute')
@@ -243,6 +267,26 @@
       hour.style.transform = `rotate(${30 * now.getHours() - 90 + now.getMinutes() * 30 / 60}deg)`
       minute.style.transform = `rotate(${6 * now.getMinutes() - 90 + now.getSeconds() * 6 / 60}deg)`
       second.style.transform = `rotate(${6 * now.getSeconds() - 90}deg)`
+
+      const time = document.getElementById('time')
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      let ampm = "AM";
+      if (hours > 12) {
+        ampm = "PM";
+        hours = hours - 12;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      time.innerText = hours + " : " + minutes + " : " + seconds + " " + ampm;
     }
 
     updateClock()
@@ -250,14 +294,16 @@
 
     clock.onmouseover = () => {
       clockbg.style.backgroundColor = "rgba(0, 0, 0,0.3)"
-      hour.style.backgroundColor = "rgb(211, 211, 211)"
+      hour.style.backgroundColor = "rgb(236, 196, 255)"
       minute.style.backgroundColor = "rgb(255,255,255)"
+      time.classList.add("glow")
     }
-    clock.onmouseout = () => { 
+    clock.onmouseout = () => {
       clockbg.style.backgroundColor = "rgb(12, 12, 12)"
       hour.style.backgroundColor = "#fff"
       minute.style.backgroundColor = "#bdb675"
       second.style.backgroundColor = "#fff069"
+      time.classList.remove("glow")
     }
   </script>
 
